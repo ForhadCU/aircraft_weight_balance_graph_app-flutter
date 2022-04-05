@@ -48,7 +48,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
   double paddingValue = 2.0;
   double totalWeight = 0.00;
   double totalMoment = 0.00;
-  double leftWeight = 2189.20;
+  double leftWeight = 771.96;
 
   TextEditingController edtTxtWeightCtrl = TextEditingController();
   @override
@@ -180,7 +180,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           children: [
                             Text(
                               totalWeight == 0
-                                  ? "10.80"
+                                  ? "1428.04"
                                   : totalWeight.toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
@@ -199,7 +199,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           children: [
                             Text(
                                 totalMoment == 0
-                                    ? "Total (M)   :   0.35"
+                                    ? "Total (M)   :   120.21"
                                     : "Total (M)   :   " +
                                         totalMoment.toStringAsFixed(2),
                                 style: TextStyle(
@@ -259,10 +259,16 @@ class _CalculationScreenState extends State<CalculationScreen> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  EquipmentModel equipmentModel = equListModel[7];
-                  print(equipmentModel.moment);
-                  Navigator.push(context,PageTransition(child: ShowGraphScreen(eqList: equListModel), type: PageTransitionType.bottomToTop));
-
+                  // EquipmentModel equipmentModel = equListModel[7];
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: ShowGraphScreen(
+                            // eqList: equListModel,
+                            totalWeight: totalWeight,
+                            totalMoment: totalMoment,
+                          ),
+                          type: PageTransitionType.bottomToTop));
                 },
                 style: ElevatedButton.styleFrom(
                     primary: MyColor.col_1,
@@ -307,7 +313,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                 flex: 2,
                 child: InkWell(
                   onTap: () {
-                    equipmentModel.id == 8
+                    equipmentModel.id == 8 ||  equipmentModel.id == 7
                         ? null
                         : showDialog(
                             context: context,
@@ -320,7 +326,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                     // print(equipmentModel.id);
                   },
                   child: Container(
-                    alignment: equipmentModel.id == 8
+                    alignment: equipmentModel.id == 8 || equipmentModel.id == 7
                         ? Alignment.center
                         : Alignment.centerRight,
                     padding: /* equipmentModel.id == 8
@@ -331,7 +337,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                                         right: paddingValue)
                                     : */
                         EdgeInsets.all(paddingValue),
-                    child: equipmentModel.id == 8
+                    child: equipmentModel.id == 8 || equipmentModel.id == 7
                         ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
