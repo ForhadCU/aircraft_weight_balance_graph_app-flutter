@@ -1,14 +1,17 @@
+import 'package:calculation_app/Const/const.keywords.dart';
+
 class MyValues {
+  static double maxWeight = 2200;
   static var names = [
-    'Pilot',
-    'Front Passenger',
-    'Rear passenger 1',
-    'Rear passenger 2',
-    'Baggage',
-    'Std Equip',
-    'Fuel (gallons)',
-    'Base aircraft',
-    'Oil'
+    ConstKeywords.Pilot,
+    ConstKeywords.FrontPassenger,
+    ConstKeywords.Rearpassenger1,
+    ConstKeywords.RearPassenger2,
+    ConstKeywords.Baggage,
+    ConstKeywords.StdEquip,
+    ConstKeywords.Fuel,
+    ConstKeywords.BaseAircraft,
+    ConstKeywords.Oil,
   ];
   static var weight = [
     0.00,

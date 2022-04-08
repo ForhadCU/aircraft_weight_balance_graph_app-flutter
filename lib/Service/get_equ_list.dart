@@ -1,9 +1,8 @@
-import 'package:calculation_app/Const/my_colors.dart';
 import 'package:calculation_app/Const/values.dart';
 import 'package:calculation_app/Model/equ_model.dart';
 
-class EquipmentListService {
-  static List<EquipmentModel> getEquipmentList() {
+class ServiceGetEquipmentList {
+  static Future< List<EquipmentModel>> getEquipmentList() async {
     final List<EquipmentModel> list = _mGetDummyList();
     return list;
   }

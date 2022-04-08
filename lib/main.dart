@@ -1,17 +1,17 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:math';
-
 import 'package:calculation_app/Const/my_colors.dart';
+import 'package:calculation_app/Const/values.dart';
 import 'package:calculation_app/Model/equ_model.dart';
 import 'package:calculation_app/Screen/show_graph.dart';
 import 'package:calculation_app/Service/get_equ_list.dart';
 import 'package:calculation_app/Utils/my_scr_size.dart';
 import 'package:calculation_app/Widget/custom-text.dart';
-import 'package:calculation_app/Widget/item_equ.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+
+import 'ListViewItems/item_equ.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,20 +44,44 @@ class CalculationScreen extends StatefulWidget {
 }
 
 class _CalculationScreenState extends State<CalculationScreen> {
-  List<EquipmentModel> equListModel = EquipmentListService.getEquipmentList();
+  // List<EquipmentModel> equListModel = EquipmentListService.getEquipmentList();
+  late List<EquipmentModel> _list;
+  late int listSize;
   double paddingValue = 2.0;
-  double totalWeight = 0.00;
-  double totalMoment = 0.00;
-  double leftWeight = 771.96;
+  double _totalWeight = 0;
+  double _totalMoment = 0;
+  double _leftWeight = 0;
 
   TextEditingController edtTxtWeightCtrl = TextEditingController();
+
+  get _mGetTotalWeight {
+    double tW = 0;
+    double tM = 0;
+    double lW = 0;
+    for (var item in _list) {
+      tW += item.weight;
+      tM += item.moment;
+      lW = MyValues.maxWeight - tW;
+    }
+    _totalWeight = tW;
+    _totalMoment = tM;
+    _leftWeight = lW;
+  }
+
   @override
   void initState() {
     super.initState();
+    _list = [];
+    ServiceGetEquipmentList.getEquipmentList().then((value) {
+      setState(() {
+        _list = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    _mGetTotalWeight;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -79,7 +103,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            //Header Line
+            //Heading
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -100,11 +124,18 @@ class _CalculationScreenState extends State<CalculationScreen> {
                       Expanded(
                           flex: 2,
                           child: Container(
-                            alignment: Alignment.center,
+                            alignment: Alignment.centerLeft,
                             padding: EdgeInsets.all(5),
-                            child: CustomText(
-                              text: 'Weight',
-                              textColor: Colors.white,
+                            child: Column(
+                              children: [
+                                CustomText(
+                                  text: 'Weight',
+                                  textColor: Colors.white,
+                                ),
+                                 SizedBox(height: 2,)
+                                ,
+                                CustomText(text: "(lb)", textColor: Colors.white, fontSize: 12,)
+                              ],
                             ),
                           )),
                       Expanded(
@@ -112,9 +143,16 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           child: Container(
                             alignment: Alignment.centerRight,
                             padding: EdgeInsets.all(5),
-                            child: CustomText(
-                              text: 'Arm',
-                              textColor: Colors.white,
+                            child: Column(
+                              children: [
+                                CustomText(
+                                  text: 'Arm',
+                                  textColor: Colors.white,
+                                ),
+                                 SizedBox(height: 2,)
+                                ,
+                                CustomText(text: "(in)", textColor: Colors.white, fontSize: 12,)
+                              ],
                             ),
                           )),
                       Expanded(
@@ -122,9 +160,16 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           child: Container(
                             alignment: Alignment.centerRight,
                             padding: EdgeInsets.all(5),
-                            child: CustomText(
-                              text: 'Moment',
-                              textColor: Colors.white,
+                            child: Column(
+                              children: [
+                                CustomText(
+                                  text: 'Moment',
+                                  textColor: Colors.white,
+                                ),
+                                 SizedBox(height: 2,)
+                                ,
+                                CustomText(text: "/1000 (inch P)", textColor: Colors.white, fontSize: 12,)
+                              ],
                             ),
                           )),
                     ],
@@ -133,15 +178,22 @@ class _CalculationScreenState extends State<CalculationScreen> {
               ],
             ),
 
-            //List all equipments
+            //ListPart
             ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: equListModel.length,
+                itemCount: _list.length,
                 itemBuilder: (context, index) {
-                  EquipmentModel equipmentModel = equListModel[index];
+                  EquipmentModel equipmentModel = _list[index];
 
-                  return EquipmentListItem(
+                  return ItemEquipmentListView(
+                    callback: (double w, double m) {
+                      // print(i);
+                      setState(() {
+                        _list[index].weight = w;
+                        _list[index].moment = m;
+                      });
+                    },
                     equipmentModel: equipmentModel,
                     id: equipmentModel.id,
                     name: equipmentModel.equName,
@@ -155,11 +207,14 @@ class _CalculationScreenState extends State<CalculationScreen> {
               thickness: 1,
               color: Colors.black54,
             ),
+
+            //vTotal Calculation Part
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  //vTotal Weight
                   Expanded(
                       child: Row(
                     children: [
@@ -169,7 +224,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           children: [
                             Text(
                               'Total (W) : ',
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -179,17 +235,17 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              totalWeight == 0
-                                  ? "1428.04"
-                                  : totalWeight.toStringAsFixed(2),
+                              _totalWeight.toStringAsFixed(2),
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
                       ),
                     ],
                   )),
+
+                  //vTotal Moment
                   Expanded(
                       child: Row(
                     children: [
@@ -198,13 +254,12 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                                totalMoment == 0
-                                    ? "Total (M)   :   120.21"
-                                    : "Total (M)   :   " +
-                                        totalMoment.toStringAsFixed(2),
+                                "Total (M) : " +
+                                    _totalMoment.toStringAsFixed(2),
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal)),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                )),
                           ],
                         ),
                       ),
@@ -213,6 +268,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
                 ],
               ),
             ),
+
+            //vLeft Wieght
             Padding(
               padding: EdgeInsets.all(8),
               child: Row(
@@ -226,7 +283,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           children: [
                             Text(
                               'Left (W) : ',
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -236,11 +294,11 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              leftWeight < 0
+                              _leftWeight < 0
                                   ? "0.00"
-                                  : leftWeight.toStringAsFixed(2),
+                                  : _leftWeight.toStringAsFixed(2),
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -265,8 +323,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
                       PageTransition(
                           child: ShowGraphScreen(
                             // eqList: equListModel,
-                            totalWeight: totalWeight,
-                            totalMoment: totalMoment,
+                            totalWeight: _totalWeight,
+                            totalMoment: _totalMoment,
                           ),
                           type: PageTransitionType.bottomToTop));
                 },
@@ -281,199 +339,6 @@ class _CalculationScreenState extends State<CalculationScreen> {
                   text: "Show Graphical View",
                   fontSize: 16,
                 )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget EquipmentListItem(
-      {required EquipmentModel equipmentModel,
-      required int id,
-      required String name,
-      required double weight,
-      required double arm,
-      required double moment}) {
-    return Container(
-        padding: EdgeInsets.only(right: 8, left: 6),
-        height: MyScreenSize.mGetHeight(context: context, percentage: 8.0),
-        color: equipmentModel.id % 2 == 0 ? Colors.white10 : Colors.black12,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-                flex: 3,
-                child: Container(
-                  padding: EdgeInsets.all(paddingValue),
-                  child: CustomText(
-                    text: name,
-                  ),
-                )),
-            Expanded(
-                flex: 2,
-                child: InkWell(
-                  onTap: () {
-                    equipmentModel.id == 8 ||  equipmentModel.id == 7
-                        ? null
-                        : showDialog(
-                            context: context,
-                            builder: (context) {
-                              return _showInputDiaglog(
-                                  equipmentModel,
-                                  equipmentModel.equName,
-                                  equipmentModel.weight);
-                            }).then((value) {});
-                    // print(equipmentModel.id);
-                  },
-                  child: Container(
-                    alignment: equipmentModel.id == 8 || equipmentModel.id == 7
-                        ? Alignment.center
-                        : Alignment.centerRight,
-                    padding: /* equipmentModel.id == 8
-                                    ? EdgeInsets.only(
-                                        top: paddingValue,
-                                        bottom: paddingValue,
-                                        left: 6,
-                                        right: paddingValue)
-                                    : */
-                        EdgeInsets.all(paddingValue),
-                    child: equipmentModel.id == 8 || equipmentModel.id == 7
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CustomText(
-                                text: equipmentModel.weight.toStringAsFixed(2),
-                                fontWeight: FontWeight.bold,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                            ],
-                          )
-                        : Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CustomText(
-                                text: equipmentModel.weight.toStringAsFixed(2),
-                                fontWeight: FontWeight.bold,
-                                textDecoration: TextDecoration.underline,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.edit,
-                                size: 18,
-                                color: Colors.grey,
-                              )
-                            ],
-                          ),
-                  ),
-                )),
-            Expanded(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.all(paddingValue),
-                  child: CustomText(
-                    text: equipmentModel.arm.toString(),
-                  ),
-                )),
-            Expanded(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.all(paddingValue),
-                  child: CustomText(
-                    text: equipmentModel.id == 8
-                        ? "0.35"
-                        : moment.toStringAsFixed(2),
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-          ],
-        ));
-  }
-
-  Widget _showInputDiaglog(
-      EquipmentModel equipmentModel, String equName, double weight) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //Checking Part
-            Column(children: [
-              CustomText(
-                text: equName,
-                textColor: MyColor.col_3,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-
-              TextField(
-                controller: edtTxtWeightCtrl,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                    label: Text("Weight"),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: MyColor.col_3))),
-              ), //team name textfield
-
-              SizedBox(
-                height: 20,
-              ),
-              //Create Button Part
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    equipmentModel.weight = edtTxtWeightCtrl.text.isEmpty
-                        ? weight
-                        : double.parse(edtTxtWeightCtrl.text);
-                    if (equName == "Fuel (gallons)") {
-                      equipmentModel.weight *= 6;
-                    }
-                    equipmentModel.moment =
-                        equipmentModel.weight * equipmentModel.arm / 1000;
-                    totalWeight = 0.00;
-                    totalMoment = 0.00;
-                    // leftWeight = 2200.00;
-                    for (var i = 0; i < equListModel.length; i++) {
-                      EquipmentModel equipmentModel = equListModel[i];
-                      totalWeight += equipmentModel.weight;
-                      totalMoment += equipmentModel.moment;
-                    }
-                    leftWeight = 2200 - totalWeight;
-                    edtTxtWeightCtrl = TextEditingController();
-                    Navigator.of(context).pop();
-                  });
-                },
-                child: CustomText(
-                  text: "Enter",
-                  textColor: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                style: ElevatedButton.styleFrom(
-                    primary: MyColor.col_3,
-                    fixedSize: Size(
-                        MyScreenSize.mGetWidth(
-                            context: context, percentage: 60),
-                        0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20))),
-              ), //create btn
-
-              //team id textfield
-            ]),
           ],
         ),
       ),
