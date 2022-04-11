@@ -77,7 +77,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
         _list = value;
       });
     });
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {

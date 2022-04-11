@@ -63,6 +63,9 @@ class _DlgWeightEntryState extends State<DlgWeightEntry> {
               ),
 
               TextField(
+                onTap: (() => _controllerWeightEdtTxt.selection = TextSelection(
+                    baseOffset: 0,
+                    extentOffset: _controllerWeightEdtTxt.value.text.length)),
                 controller: _controllerWeightEdtTxt,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
