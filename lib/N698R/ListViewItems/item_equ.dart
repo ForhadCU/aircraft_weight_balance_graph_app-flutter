@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:calculation_app/Const/const.keywords.dart';
-import 'package:calculation_app/Model/equ_model.dart';
-import 'package:calculation_app/Widget/dlg_weight_entry.dart';
+import 'package:calculation_app/N698R/Const/const.keywords.dart';
+import 'package:calculation_app/N698R/Model/equ_model.dart';
+import 'package:calculation_app/N698R/Widget/dlg_weight_entry.dart';
 import 'package:flutter/material.dart';
 
 import '../Widget/custom-text.dart';

@@ -1,13 +1,13 @@
-import 'package:calculation_app/Const/values.dart';
-import 'package:calculation_app/Model/equ_model.dart';
+import 'package:calculation_app/N698R/Const/values.dart';
+import 'package:calculation_app/N698R/Model/equ_model.dart';
 
 class ServiceGetEquipmentList {
-  static Future< List<EquipmentModel>> getEquipmentList() async {
+  static Future<List<EquipmentModel>> getEquipmentList() async {
     final List<EquipmentModel> list = _mGetDummyList();
     return list;
   }
 
- static List<EquipmentModel> _mGetDummyList() {
+  static List<EquipmentModel> _mGetDummyList() {
     List<EquipmentModel> dummylist = [];
     EquipmentModel equipmentModel;
 
@@ -25,12 +25,15 @@ class ServiceGetEquipmentList {
   }
 }
 /* "Pilot"
-"Front Passenger"
-Rear passenger 1
-Rear passenger 2
-Baggage
-Std Equip
-Fuel (gallons)
-Max Fuel
-Base aircraft
-Oil */
+"Copilot"
+"Middle Passenger Left"
+"Middle Passenger Right"
+"Rear Passenger Left"
+"Rear Passenger Middle"
+"Rear Passenger Right"
+"Baggage"
+"Std Equip"
+"Fuel (gallons)""
+"Max Fuel"
+"Base aircraft"
+"Oil" */

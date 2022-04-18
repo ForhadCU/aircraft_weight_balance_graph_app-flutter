@@ -48,13 +48,13 @@ class _ShowGraphScreenState extends State<ShowGraphScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.only(right: 5),
+                padding: EdgeInsets.only(right: 5),
                 height:
                     MyScreenSize.mGetHeight(context: context, percentage: 60),
                 child: SfCartesianChart(
                     title: ChartTitle(
-                      textStyle: TextStyle(fontSize: 14),
-                        text: 'N2570R CG Envelope',
+                        textStyle: TextStyle(fontSize: 14),
+                        text: 'N26963 CG Envelope',
                         alignment: ChartAlignment.center),
                     annotations: <CartesianChartAnnotation>[
                       CartesianChartAnnotation(
@@ -77,9 +77,9 @@ class _ShowGraphScreenState extends State<ShowGraphScreen> {
                     primaryXAxis: NumericAxis(
                       // interval: 2,
                       // opposedPosition: true,
-                          interval: 5,
-                          minimum: 120,
-                          maximum: 255,
+                      interval: 5,
+                      minimum: 120,
+                      maximum: 255,
                       title: AxisTitle(
                         textStyle: TextStyle(fontSize: 14),
                         text: 'Moment/1000',
@@ -88,9 +88,9 @@ class _ShowGraphScreenState extends State<ShowGraphScreen> {
                     primaryYAxis: NumericAxis(
                       // edgeLabelPlacement: EdgeLabelPlacement.shift,
                       // interval: 300,
-                       interval: 100,
-                          minimum: 100,
-                          maximum: 2300,
+                      interval: 100,
+                      minimum: 100,
+                      maximum: 2300,
                       title: AxisTitle(
                         text: 'Weight',
                         textStyle: TextStyle(fontSize: 14),

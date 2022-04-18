@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:calculation_app/Const/const.keywords.dart';
-import 'package:calculation_app/Model/equ_model.dart';
+import 'package:calculation_app/N698R/Const/const.keywords.dart';
+import 'package:calculation_app/N698R/Model/equ_model.dart';
 import 'package:calculation_app/main.dart';
 import 'package:flutter/material.dart';
 
