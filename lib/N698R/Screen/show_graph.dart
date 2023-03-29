@@ -73,7 +73,7 @@ class _ShowGraphScreenState extends State<ShowGraphScreen> {
                           x: widget.totalMoment,
                           y: widget.totalWeight),
                     ],
-                    palette: <Color>[Colors.red, Colors.green],
+                    palette: <Color>[Color.fromRGBO(244, 67, 54, 1), Colors.green],
                     primaryXAxis: NumericAxis(
                       // interval: 2,
                       // opposedPosition: true,
